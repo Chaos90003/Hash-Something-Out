@@ -1,3 +1,8 @@
+#Name: Caden Hanscom
+#Date: 12/2/2025
+#Description: Hashing useing mid-squared
+
+
 import csv
 import time
 
@@ -14,14 +19,28 @@ class DataItem:
         self.production_company = line[7]
         self.quote = line[8]
 
+#converts to ASCII and adds to total key then squares the key, 
+#extracts the middle 5 digits then modulos table size for valid index
 def hashFunction(stringData):
     key = 0
     for ch in stringData:
         key += ord(ch)
 
-    return key
+    squared_key = key * key
+    squared_str = str(squared_key)
 
+    mid_digits = 5
+    if len(squared_str) <= mid_digits:
+        mid_num = int(squared_str)
+    else:
+        mid_start = (len(squared_str) - mid_digits) // 2
+        mid_num = int(squared_str[mid_start:mid_start + mid_digits])
 
+    table_size = 10000
+    idx = mid_num % table_size
+    return idx
+
+#Hash statistics
 def stats(name, table, build_time):
     total_buckets = len(table)
     used_buckets = 0
@@ -39,7 +58,7 @@ def stats(name, table, build_time):
                 total_collisions += (bucket_size - 1)
 
     print(f"\nStats for {name}")
-    print("Optimization Attempt: Additive Hashing ")
+    print("Optimization Attempt: Mid-squared hashing")
     print(f"Used buckets: {used_buckets}")
     print(f"Wasted buckets: {wasted_buckets}")
     print(f"Total Collisions: {total_collisions}")
@@ -65,10 +84,8 @@ with open(file, 'r', newline='',  encoding="utf8") as csvfile:
                 counter += 1
                 continue
             title = row[0]
-            quote = row[-1]
-
-            titleKey = hashFunction(title)
-            idx = titleKey % size
+            
+            idx = hashFunction(title)
 
             if hashTitleTable[idx] is None:
                 hashTitleTable[idx] = [title]
@@ -95,11 +112,9 @@ with open(file, 'r', newline='',  encoding="utf8") as csvfile:
             if counter == 0:
                 counter += 1
                 continue
-            title = row[0]
             quote = row[-1]
 
-            quoteKey = hashFunction(quote)
-            idx = quoteKey % size
+            idx = hashFunction(quote)
 
             if hashQuoteTable[idx] is None:
                 hashQuoteTable[idx] = [quote]
