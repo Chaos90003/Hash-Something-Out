@@ -1,2 +1,4 @@
 # Hash-Something-Out
 Homework for COS226
+
+My first two approaches, additive hashing and mid-squared hashing were both extremely ineffective both having roughly 6000-7000 wasted buckets and 11000-12000 collisions. However, these two approaches were overall the fastest approaches. Both forms of polynomial hashing did best in regards to wasting the least amount of buckets and least collissions but the run times were not as great as the other approaches and I'm unsure why the build times between the two hash tables were so different. Approach 5, XOR hashing, resulted in a bit more wasted buckets and collissions compared to approaches 3 and 4, but the build times were very similar to each other and faster. 
