@@ -1,6 +1,6 @@
 #Name: Caden Hanscom
 #Date: 12/2/2025
-#Description: Hashing useing mid-squared
+#Description: Attempt to improve the polynomial rolling approach with multiplication
 
 
 import csv
@@ -19,16 +19,13 @@ class DataItem:
         self.production_company = line[7]
         self.quote = line[8]
 
-#Polynomial rolling Hash turning string into a hash value by treaing the
-#string like a number with a base p system
+#simpler polynomial hash, hash's incrementally with multiplication
 def hashFunction(stringData):
     table_size = 10000
     key = 0
-    p = 17 #small prime
-    m = 2**31 - 1 #large prime
-    
-    for i, ch in enumerate(stringData):
-        key = (key + ord(ch) * pow(p, i, m)) % m
+
+    for ch in stringData:
+        key = key * 31 + ord(ch)
 
     idx = key % table_size
     return idx
@@ -51,7 +48,7 @@ def stats(name, table, build_time):
                 total_collisions += (bucket_size - 1)
 
     print(f"\nStats for {name}")
-    print("Optimization Attempt: Polynomial rolling Hash")
+    print("Optimization Attempt: Polynomial hash with incremental multiplication")
     print(f"Used buckets: {used_buckets}")
     print(f"Wasted buckets: {wasted_buckets}")
     print(f"Total Collisions: {total_collisions}")
