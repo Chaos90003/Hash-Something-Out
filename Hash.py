@@ -19,25 +19,18 @@ class DataItem:
         self.production_company = line[7]
         self.quote = line[8]
 
-#converts to ASCII and adds to total key then squares the key, 
-#extracts the middle 5 digits then modulos table size for valid index
+#Polynomial rolling Hash turning string into a hash value by treaing the
+#string like a number with a base p system
 def hashFunction(stringData):
-    key = 0
-    for ch in stringData:
-        key += ord(ch)
-
-    squared_key = key * key
-    squared_str = str(squared_key)
-
-    mid_digits = 5
-    if len(squared_str) <= mid_digits:
-        mid_num = int(squared_str)
-    else:
-        mid_start = (len(squared_str) - mid_digits) // 2
-        mid_num = int(squared_str[mid_start:mid_start + mid_digits])
-
     table_size = 10000
-    idx = mid_num % table_size
+    key = 0
+    p = 17 #small prime
+    m = 2**31 - 1 #large prime
+    
+    for i, ch in enumerate(stringData):
+        key = (key + ord(ch) * pow(p, i, m)) % m
+
+    idx = key % table_size
     return idx
 
 #Hash statistics
@@ -58,7 +51,7 @@ def stats(name, table, build_time):
                 total_collisions += (bucket_size - 1)
 
     print(f"\nStats for {name}")
-    print("Optimization Attempt: Mid-squared hashing")
+    print("Optimization Attempt: Polynomial rolling Hash")
     print(f"Used buckets: {used_buckets}")
     print(f"Wasted buckets: {wasted_buckets}")
     print(f"Total Collisions: {total_collisions}")
