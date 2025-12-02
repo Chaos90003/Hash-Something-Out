@@ -1,7 +1,6 @@
 #Name: Caden Hanscom
 #Date: 12/2/2025
-#Description: Attempt to improve the polynomial rolling approach with multiplication
-
+#Description: XOR Hashing
 
 import csv
 import time
@@ -19,14 +18,14 @@ class DataItem:
         self.production_company = line[7]
         self.quote = line[8]
 
-#simpler polynomial hash, hash's incrementally with multiplication
+#Shifts the ASCII and XOR's into the key
 def hashFunction(stringData):
     table_size = 10000
     key = 0
 
-    for ch in stringData:
-        key = key * 31 + ord(ch)
-
+    for i, ch in enumerate(stringData):
+        key ^= (ord(ch) << (i % 8))
+    
     idx = key % table_size
     return idx
 
@@ -48,7 +47,7 @@ def stats(name, table, build_time):
                 total_collisions += (bucket_size - 1)
 
     print(f"\nStats for {name}")
-    print("Optimization Attempt: Polynomial hash with incremental multiplication")
+    print("Optimization Attempt: XOR Hashing")
     print(f"Used buckets: {used_buckets}")
     print(f"Wasted buckets: {wasted_buckets}")
     print(f"Total Collisions: {total_collisions}")
